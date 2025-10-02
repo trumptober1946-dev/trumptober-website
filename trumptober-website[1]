@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Directory listing for /trumptober-website/</title>
+</head>
+<body>
+<h1>Directory listing for /trumptober-website/</h1>
+<hr>
+<ul>
+<li><a href=".git/">.git/</a></li>
+<li><a href=".gitignore">.gitignore</a></li>
+<li><a href=".next/">.next/</a></li>
+<li><a href="app/">app/</a></li>
+<li><a href="bun.lock">bun.lock</a></li>
+<li><a href="components/">components/</a></li>
+<li><a href="components.json">components.json</a></li>
+<li><a href="deploy.sh">deploy.sh</a></li>
+<li><a href="DEPLOYMENT.md">DEPLOYMENT.md</a></li>
+<li><a href="eslint.config.mjs">eslint.config.mjs</a></li>
+<li><a href="GITHUB_DEPLOYMENT.md">GITHUB_DEPLOYMENT.md</a></li>
+<li><a href="hooks/">hooks/</a></li>
+<li><a href="lib/">lib/</a></li>
+<li><a href="next-env.d.ts">next-env.d.ts</a></li>
+<li><a href="next.config.ts">next.config.ts</a></li>
+<li><a href="node_modules/">node_modules/</a></li>
+<li><a href="package.json">package.json</a></li>
+<li><a href="postcss.config.mjs">postcss.config.mjs</a></li>
+<li><a href="public/">public/</a></li>
+<li><a href="PUSH_TO_GITHUB.md">PUSH_TO_GITHUB.md</a></li>
+<li><a href="README.md">README.md</a></li>
+<li><a href="server.log">server.log</a></li>
+<li><a href="tsconfig.json">tsconfig.json</a></li>
+<li><a href="vercel.json">vercel.json</a></li>
+</ul>
+<hr>
+</body>
+</html>
+<script>
+    window.__lindy_frame_handlers_initialized ||= (() => {
+        window.addEventListener('message', (event) => {
+            if (event.data.type === 'navigate') {
+                const { path } = event.data
+
+                const url = new URL(path, window.location.origin)
+
+                window.location.href = url.toString()
+            } else if (event.data.type === 'navigate-back') {
+                window.history.back()
+            } else if (event.data.type === 'navigate-forward') {
+                window.history.forward()
+            } else if (event.data.type === 'reload') {
+                window.location.reload()
+            }
+        })
+
+        let currentHistoryIndex = window.history.length - 1
+
+        function sendNavigationState() {
+            window.parent.postMessage({
+                type: 'navigation-state',
+                state: {
+                    canGoBack: currentHistoryIndex > 0,
+                    canGoForward: currentHistoryIndex < window.history.length - 1,
+                    path: window.location.pathname,
+                    href: window.location.href,
+                    title: document.title,
+                },
+            }, '*')
+        }
+
+        function watchForNavigationChange(currentPath, attempts = 0) {
+            if (attempts > 10) {
+                return
+            }
+
+            if (window.location.pathname === currentPath) {
+                setTimeout(() => watchForNavigationChange(currentPath, attempts + 1), 100)
+            } else {
+                sendNavigationState()
+            }
+        }
+
+        window.addEventListener('popstate', () => {
+            currentHistoryIndex--
+            sendNavigationState()
+        })
+
+        window.history.pushState = new Proxy(window.history.pushState, {
+            apply: (target, thisArg, argArray) => {
+                currentHistoryIndex = window.history.length
+                watchForNavigationChange(window.location.pathname)
+                return target.apply(thisArg, argArray)
+            },
+        })
+
+        window.history.replaceState = new Proxy(window.history.replaceState, {
+            apply: (target, thisArg, argArray) => {
+                currentHistoryIndex = window.history.length
+                watchForNavigationChange(window.location.pathname)
+                return target.apply(thisArg, argArray)
+            },
+        })
+
+        function sendPageLoaded() {
+            window.parent.postMessage({
+                type: 'page-loaded',
+            }, '*')
+        }
+
+        if (document.readyState === 'complete') {
+            sendPageLoaded()
+        } else {
+            window.addEventListener('load', sendPageLoaded)
+        }
+
+        sendNavigationState()
+
+        return true
+    })()
+</script>
